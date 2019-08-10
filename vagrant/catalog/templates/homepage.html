@@ -6,16 +6,16 @@
 
 
 {% for i in categories %}
-
+<a href='{{url_for('showCategoryItems',category_name = i.name)}}'>
 <div>
 
 <p>{{i.name}}</p>
 
 </div>
-
-
+</a>
 {% endfor %}
 </br>
+
 <h1>Latest Items</h1>
 {% for i in latestItems %}
 

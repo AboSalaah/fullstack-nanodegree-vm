@@ -1,10 +1,21 @@
-from flask import Flask
-
+from flask import Flask , render_template
+from sqlalchemy import create_engine
+from sqlalchemy import desc
+from sqlalchemy.orm import sessionmaker
+from database_setup import Base, Category, Item
 app = Flask(__name__)
+
+engine = create_engine('sqlite:///itemcatalog.db')
+Base.metadata.bind = engine
+
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
 
 @app.route('/')
 def showCategoriesAndLatestitems():
-    return "the home page"
+    categories = session.query(Category)
+    latestItems = session.query(Item).order_by(desc(Item.last_modification))
+    return render_template('homepage.html',categories=categories, latestItems = latestItems)
 
 @app.route('/catalog/<category_name>/items/')
 def showCategoryItems(category_name):
