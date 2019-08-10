@@ -27,7 +27,10 @@ def showCategoryItems(category_name):
 
 @app.route('/catalog/<category_name>/<string:item_name>/')
 def showItemsDescription(category_name,item_name):
-    return ("this is %s description of %s category" %(item_name,category_name))
+    category = session.query(Category).filter_by(name = category_name).one()
+    item = session.query(Item).filter_by(category_id = category.id, name=item_name).one()
+    return render_template('item_description.html',item = item)
+    
 
 
 if __name__ == '__main__':
