@@ -1,0 +1,37 @@
+<html>
+
+<body>
+
+<h1>Categories</h1>
+
+
+{% for i in categories %}
+
+<div>
+
+<p>{{i.name}}</p>
+
+</div>
+
+
+{% endfor %}
+</br>
+<h1>Latest Items</h1>
+{% for i in latestItems %}
+
+<div>
+
+<p>{{i.name}}</p>
+
+<p>{{i.description}}</p>
+
+<p> {{i.last_modification}} </p>
+
+</div>
+
+
+{% endfor %}
+
+</body>
+
+</html>
