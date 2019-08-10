@@ -19,7 +19,11 @@ def showCategoriesAndLatestitems():
 
 @app.route('/catalog/<category_name>/items/')
 def showCategoryItems(category_name):
-    return ("these are %s items" %(category_name))
+    categories = session.query(Category)
+    category = session.query(Category).filter_by(name = category_name).one()
+    items = session.query(Item).filter_by(category_id = category.id)
+    return render_template('category_items.html',categories=categories,items=items,category_name=category_name)
+    
 
 @app.route('/catalog/<category_name>/<string:item_name>/')
 def showItemsDescription(category_name,item_name):
