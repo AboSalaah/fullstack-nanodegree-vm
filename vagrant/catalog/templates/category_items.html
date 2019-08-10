@@ -1,0 +1,37 @@
+<html>
+
+<body>
+
+<h1>Categories</h1>
+
+
+{% for i in categories %}
+<a href='{{url_for('showCategoryItems',category_name = i.name)}}'>
+<div>
+
+<p>{{i.name}}</p>
+
+</div>
+</a>
+{% endfor %}
+</br>
+
+<h1>{{category_name}} Items</h1>
+{% for i in items %}
+
+<div>
+
+<p>{{i.name}}</p>
+
+<p>{{i.description}}</p>
+
+<p> {{i.last_modification}} </p>
+
+</div>
+
+
+{% endfor %}
+
+</body>
+
+</html>
