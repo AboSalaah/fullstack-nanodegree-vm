@@ -6,6 +6,7 @@ from database_setup import Base, Category, Item
 
 from flask import session as login_session
 import random, string
+import json
 app = Flask(__name__)
 
 engine = create_engine('sqlite:///itemcatalog.db?check_same_thread=False')
@@ -13,12 +14,20 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-
+CLIENT_ID = json.loads( open('credentials.json', 'r').read())['web']['client_id']
 @app.route('/')
 def showCategoriesAndLatestitems():
     categories = session.query(Category)
     latestItems = session.query(Item).order_by(desc(Item.last_modification))
     return render_template('homepage.html',categories=categories, latestItems = latestItems)
+
+@app.route('/login')
+def showLogin():
+    #create anti-forgery state token
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                    for x in xrange(32))
+    login_session['state'] = state
+    return "The current session state is %s" % login_session['state']
 
 @app.route('/catalog/<category_name>/items/')
 def showCategoryItems(category_name):
