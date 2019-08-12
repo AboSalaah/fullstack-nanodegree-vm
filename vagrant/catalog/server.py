@@ -188,12 +188,12 @@ def newCatalogItem():
     return "making new item"
 
 @app.route('/catalog/<item_name>/edit', methods=['GET', 'POST'])
-def editCatalogItem():
+def editCatalogItem(item_name):
     return "edit existing item"
 
 
-@app.route('/catalog/<item_name>/delete',, methods=['GET', 'POST'])
-def deleteCatalogItem():
+@app.route('/catalog/<item_name>/delete', methods=['GET', 'POST'])
+def deleteCatalogItem(item_name):
     return "deleteing existing item"
 
 

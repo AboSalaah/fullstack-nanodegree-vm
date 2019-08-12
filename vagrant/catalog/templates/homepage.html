@@ -15,7 +15,13 @@
 </a>
 {% endfor %}
 </br>
-
+</br>
+</br>
+{%if 'username' in session %}
+<a href="{{url_for('newCatalogItem')}}">
+    <button type="button" class="btn btn-success">Add Item</button>
+</a>
+{%endif%}
 <h1>Latest Items</h1>
 {% for i in latestItems %}
 <div>

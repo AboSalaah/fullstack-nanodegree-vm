@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{%include "header.html"%}
 {% block content %}
 <h1>{{item.name}}</h1>
 <div>
@@ -9,8 +10,16 @@
 
 
 </p>
-
-
+{%if 'username' in session %}
+<div>
+    <a href="{{url_for('editCatalogItem',item_name=item.name)}}">
+        <button type="button" class="btn btn-info">Edit Item</button>
+    </a>
+    <a href="{{url_for('deleteCatalogItem',item_name=item.name)}}">
+        <button type="button" class="btn btn-danger">Delete Item</button>
+    </a>
+</div>
+{%endif%}
 </div>
 
 {% endblock %}
