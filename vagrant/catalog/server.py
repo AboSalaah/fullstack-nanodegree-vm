@@ -2,7 +2,7 @@ from flask import Flask , render_template, request, redirect, jsonify, url_for, 
 from sqlalchemy import create_engine
 from sqlalchemy import desc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Category, Item
+from database_setup import Base, Category, Item, User
 
 from flask import session as login_session
 import random, string
@@ -21,6 +21,46 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 CLIENT_ID = json.loads( open('client_secrets.json', 'r').read())['web']['client_id']
+
+
+
+
+
+
+
+
+
+def createUser(login_session):
+    newUser = User(name=login_session['username'], email=login_session[
+                   'email'], picture=login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/')
 def showCategoriesAndLatestitems():
     categories = session.query(Category)
@@ -185,7 +225,20 @@ def showItemsDescription(category_name,item_name):
 
 @app.route('/catalog/item/new', methods=['GET', 'POST'])
 def newCatalogItem():
-    return "making new item"
+    if 'username' not in login_session:
+        return redirect('/login')
+    if request.method == 'POST':
+        return "not now"
+    
+    else:
+        categories = session.query(Category)
+        return render_template('add_item.html',categories=categories)
+  
+
+
+
+
+    
 
 @app.route('/catalog/<item_name>/edit', methods=['GET', 'POST'])
 def editCatalogItem(item_name):
