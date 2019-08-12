@@ -183,6 +183,22 @@ def showItemsDescription(category_name,item_name):
     return render_template('item_description.html',item = item)
     
 
+@app.route('/catalog/item/new', methods=['GET', 'POST'])
+def newCatalogItem():
+    return "making new item"
+
+@app.route('/catalog/<item_name>/edit', methods=['GET', 'POST'])
+def editCatalogItem():
+    return "edit existing item"
+
+
+@app.route('/catalog/<item_name>/delete',, methods=['GET', 'POST'])
+def deleteCatalogItem():
+    return "deleteing existing item"
+
+
+
+
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
