@@ -233,11 +233,30 @@ def showItemsDescription(category_name,item_name):
 
 @app.route('/catalog/item/new', methods=['GET', 'POST'])
 def newCatalogItem():
+    print("I'm hereeeee")
+    print(request.form)
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        return "not now"
-    
+        name = request.form.get('name',None)
+        description = request.form.get('description',None)
+        chosenCategory = request.form.get('category',None)
+        exist = session.query(Item).filter_by(name = name).first()
+        if exist is None:
+            print("name msh mtkrr")
+            category = session.query(Category).filter_by(name = chosenCategory).one()
+            newItem = Item(name = name, description = description,category_id= category.id,user_id = login_session['user_id'])
+            session.add(newItem)
+            session.commit()
+            flash('New %s Item Successfully Created' % chosenCategory)
+            return redirect(url_for('showCategoriesAndLatestitems'))
+        else:
+            print("name mtkrr")
+            
+            redirect(url_for('newCatalogItem')) 
+            flash('This item name already exist')
+            return
+
     else:
         categories = session.query(Category)
         return render_template('add_item.html',categories=categories)
