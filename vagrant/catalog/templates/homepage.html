@@ -3,38 +3,52 @@
 {%include "flash.html"%}
 {% block content %}
 
-<h1>Categories</h1>
+<div class="home_container">
+
+
+ <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4 col-sm-6 col-xs-12"> 
+     <h1 class="home_headers">Categories</h1>
 
 
 {% for i in categories %}
-<a href='{{url_for('showCategoryItems',category_name = i.name)}}'>
-<div>
+<a class="categories" href='{{url_for('showCategoryItems',category_name = i.name)}}'>
+<div >
 
 <p>{{i.name}}</p>
 
 </div>
 </a>
 {% endfor %}
-</br>
-</br>
-</br>
+
+</div> 
+
+<div class="col-md-8 col-sm-6 col-xs-12">
 {%if 'username' in session %}
 <a href="{{url_for('newCatalogItem')}}">
-    <button type="button" class="btn btn-success">Add Item</button>
+    <button type="button" class="btn btn-outline-danger waves-effect" >Add Item</button>
 </a>
 {%endif%}
-<h1>Latest Items</h1>
+<h1 class="home_headers">Latest Items</h1>
 {% for i in latestItems %}
+<a class="latest_items" href='{{url_for('showItemsDescription',category_name=i.category_name,item_name=i.name)}}'>
 <div>
 
-<p>{{i.name}}</p>
+<p><span>Item Name: </span>{{i.name}}</p>
+<p><span>Category: </span>{{i.category_name}}</p>
+<p> <span>Last Update: </span>{{i.last_modification}} </p>
 
-<p>{{i.description}}</p>
+</div>
+</a>
+{% endfor %}
+</div>
+</div>
 
-<p> {{i.last_modification}} </p>
 
 </div>
 
-{% endfor %}
+</div>
+
 
 {% endblock %}

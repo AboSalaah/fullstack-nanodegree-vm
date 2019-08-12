@@ -1,12 +1,12 @@
 <header class="header">
     {%if 'username' not in session %}
     <a class="authentication" href="{{url_for('showLogin')}}">
-    <button class="btn btn-warning">Login</button>
+    <button class="btn btn-danger">Login</button>
      </a>
      {%else%}
      <a class="authentication" href="{{url_for('gdisconnect')}}">
 
-         <button class="btn btn-warning">Logout</button>
+         <button class="btn btn-danger">Logout</button>
 
      </a>
     {%endif%}

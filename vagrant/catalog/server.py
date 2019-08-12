@@ -65,6 +65,7 @@ def getUserID(email):
 def showCategoriesAndLatestitems():
     categories = session.query(Category)
     latestItems = session.query(Item).order_by(desc(Item.last_modification))
+    
     return render_template('homepage.html',categories=categories, latestItems = latestItems)
 
 @app.route('/login')

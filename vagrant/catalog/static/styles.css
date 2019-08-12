@@ -88,3 +88,73 @@ body {
       right: 20px;
       
   }
+
+  .home_container{
+   
+    margin: 0 auto;
+    padding: 10px;
+  }
+  .container-fluid{
+    background-color: rgba(0, 0, 0,0.6);
+    overflow: auto;
+    min-width: 400px;
+    max-width:950px;
+
+  }
+ 
+  .home_headers{
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 30px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    font-weight: bold
+  }
+  .categories{
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color: rgb(217,83,79);
+    font-size: 18px;
+  }
+  .latest_items{
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color:rgb(217,83,79);
+    font-size: 15px;
+  }
+
+  .btn-outline-danger.waves-effect{
+    min-width: 50%;
+    margin-top: 10px;
+  }
+  .item_description{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 15px;
+  }
+  .item_description_header{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 30px;
+  }
+  #edit_item,#delete_item,#submit_new_item,#cancel_new_item,#submit_edit,#cancel_edit,#delete_item,#cancel_delete_item{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    min-width: 20%;
+  }
+  label{
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .delete_header{
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+ 

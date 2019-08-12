@@ -3,6 +3,9 @@
 {%include "flash.html"%}
 {% block content %}
 
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
 <form action="{{url_for('editCatalogItem',item_name=item.name)}}" method="POST">
     <div class="form-group">
       <label for="name">Name</label>
@@ -27,18 +30,21 @@
       </div>
     <div>
     <a href="{{url_for('editCatalogItem',item_name=item.name)}}">
-    <button type="submit" class="btn btn-default">Submit</button>
+    <button type="submit" class="btn btn-success" id="submit_edit">Submit</button>
     </a>
-   
+    <a href="{{url_for('showItemsDescription',category_name=category_name,item_name=item.name)}}">
+        <button  class="btn btn-danger" id="cancel_edit">Cancel</button>
+    </a>
+    
 
         </div>
   </form>
 
-  <a href="{{url_for('showItemsDescription',category_name=category_name,item_name=item.name)}}">
-    <button  class="btn btn-default">Cancel</button>
-</a>
 
 
+</div>
+</div>
+</div>
 
 
 
