@@ -12,7 +12,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Create dummy user
-user1 = User(name="dummy", email="dummy@dummy.com")
+user1 = User(name="dummy", email="dummy@dummy.com",picture="https://pbs.twimg.com/profile_images/2671170543/18debd694829ed78203a5a36dd364160_400x400.png")
 session.add(user1)
 session.commit()
 # Create dummy categories
@@ -29,7 +29,7 @@ session.add(category3)
 session.commit()
 
 # Create dummy items
-item1 = Item(name = "Zamalek",description="the best team in Africa",category=category1,user=user1)
+item1 = Item(name = "Zamalek",description="1911",category=category1,user=user1)
 session.add(item1)
 session.commit()
 
@@ -39,4 +39,8 @@ session.commit()
 
 item3 = Item(name = "Ahmed El-ahmar", description="the king of handball",category = category3,user=user1)
 session.add(item3)
+session.commit()
+
+item4 = Item(name = "Ahly",description="1907",category=category1,user=user1)
+session.add(item4)
 session.commit()
