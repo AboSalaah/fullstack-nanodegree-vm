@@ -269,7 +269,31 @@ def newCatalogItem():
 
 @app.route('/catalog/<item_name>/edit', methods=['GET', 'POST'])
 def editCatalogItem(item_name):
-    return "edit existing item"
+    if 'username' not in login_session:
+        return redirect('/login')
+    
+    item = session.query(Item).filter_by(name = item_name).one()
+    categories = session.query(Category)
+    category = session.query(Category).filter_by(id = item.category_id).one()
+    if login_session['user_id'] != item.user_id:
+        return "<script>function myFunction() {alert('You are not authorized to edit this catalog item. Please create your own items in order to edit.');}</script><body onload='myFunction()''>"
+    if request.method == 'POST':
+        item.name = request.form['name']
+        item.description = request.form['description']
+        chosenCategory = session.query(Category).filter_by(name = request.form['category']).one()
+        item.category_id = chosenCategory.id
+        session.add(item)
+        session.commit()
+        flash('Item Successfully Edited')
+        return redirect(url_for('showItemsDescription',item_name=item.name,category_name=chosenCategory.name))
+    
+    else:
+        return render_template('edit_item.html',item=item, categories=categories,category_name = category.name)
+
+
+
+
+    
 
 
 @app.route('/catalog/<item_name>/delete', methods=['GET', 'POST'])
