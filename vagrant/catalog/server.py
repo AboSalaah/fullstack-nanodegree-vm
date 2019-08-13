@@ -1,11 +1,12 @@
-from flask import Flask , render_template, request, redirect, jsonify, url_for, flash
+from flask import Flask, render_template
+from flask import request, redirect, jsonify, url_for, flash
 from sqlalchemy import create_engine
 from sqlalchemy import desc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item, User
-
 from flask import session as login_session
-import random, string
+import random
+import string
 import json
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
@@ -20,14 +21,7 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-CLIENT_ID = json.loads( open('client_secrets.json', 'r').read())['web']['client_id']
-
-
-
-
-
-
-
+CLIENT_ID = (json.loads(open('client_secrets.json', 'r').read())['web']['client_id'])
 
 
 def createUser(login_session):
@@ -40,7 +34,6 @@ def createUser(login_session):
 
     Returns:
     int: the ID of the newly created user
-
     """
     newUser = User(name=login_session['username'], email=login_session[
                    'email'], picture=login_session['picture'])
@@ -59,7 +52,6 @@ def getUserInfo(user_id):
 
     Returns:
     user: the user object
-
     """
     user = session.query(User).filter_by(id=user_id).one()
     return user
@@ -75,7 +67,6 @@ def getUserID(email):
     Returns:
     int: the ID of the user (if found)
     None : if the user isn't found
-
     """
     try:
         user = session.query(User).filter_by(email=email).one()
@@ -84,47 +75,31 @@ def getUserID(email):
         return None
 
 
-
-
-
-
-
-
-
-
-
 @app.route('/')
 def showCategoriesAndLatestitems():
-    """This function is responsible for rendering the home page template with 
+    """This function is responsible for rendering the home page template with
     the required data (all different categories and the latest added items)
 
     Returns:
     template: a HTML template of the home page
-
     """
     categories = session.query(Category)
-    #only the latest 6 items will be shown
-    latestItems = session.query(Category,Item).filter(Category.id==Item.category_id).order_by(desc(Item.last_modification)).limit(6)       
-    
-    
-    return render_template('homepage.html',categories=categories, latestItems = latestItems)
-
-
+    # only the latest 6 items will be shown
+    latestItems = session.query(Category, Item).filter(Category.id == Item.category_id).order_by(desc(Item.last_modification)).limit(6)
+    return render_template('homepage.html', categories=categories, latestItems=latestItems)
 
 
 @app.route('/categories/JSON')
 def showCategoriesandItems():
-    """This function is responsible to give the data of this API endpoint 
+    """This function is responsible to give the data of this API endpoint
     as a JSON object, the data being sent in this function is
     all the categories accompanied by their items
 
     Returns:
     JSON object: all the categories with their items
-
     """
     categories = session.query(Category)
     return jsonify(categories=[category.serialize for category in categories.all()])
-
 
 
 @app.route('/login')
@@ -134,30 +109,25 @@ def showLogin():
 
     Returns:
     template: an HTML template of the login page
-   
     """
-    #create anti-forgery state token
+    # create anti-forgery state token
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
 
-
-
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    """This function handles the code sent back from the callback method, and 
-    make some validations and verifications like validating the state token and 
+    """This function handles the code sent back from the callback method, and
+    make some validations and verifications like validating the state token and
     the access token.
     It also stores the access token in the user login session and save all user's data
-    int the login session as well. 
+    int the login session as well.
 
 
     Returns:
     template: a HTML template that contains the user data to welcome the user after logging in
-    
-
     """
     # Validate state token
     if request.args.get('state') != login_session['state']:
@@ -229,14 +199,12 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
-
     # if a user doesn't exist, make an entry for it
     user_id = getUserID(login_session['email'])
     if not user_id:
         user_id = createUser(login_session)
-    login_session['user_id']=user_id
+    login_session['user_id'] = user_id
 
-    
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -249,20 +217,14 @@ def gconnect():
     return output
 
 
-
-
-
-
 @app.route('/gdisconnect')
 def gdisconnect():
     """This function is responsible for disconnecting the user from
-    out website, it tells the server to reject the acess token, and it deletes 
+    out website, it tells the server to reject the acess token, and it deletes
     all the user data from the login session
 
     Returns:
     response: a message to the user that they are successfully disconnected or an error happened
-    
-
     """
     access_token = login_session.get('access_token')
     if access_token is None:
@@ -293,20 +255,9 @@ def gdisconnect():
         return response
 
 
-
-
-
-
-
-
-
-
-
-
-
 @app.route('/catalog/<category_name>/items/')
 def showCategoryItems(category_name):
-    """This function takes a category name and returns a HTML template page 
+    """This function takes a category name and returns a HTML template page
     that shows the items of that category to the user
 
     Parameters:
@@ -314,17 +265,16 @@ def showCategoryItems(category_name):
 
     Returns:
     template: an HTML template containing the required data
-
     """
-    
     categories = session.query(Category)
-    category = session.query(Category).filter_by(name = category_name).one()
-    items = session.query(Item).filter_by(category_id = category.id)
-    return render_template('category_items.html',categories=categories,items=items,category_name=category_name)
-    
+    category = session.query(Category).filter_by(name=category_name).one()
+    items = session.query(Item).filter_by(category_id=category.id)
+    return render_template('category_items.html', categories=categories, items=items, category_name=category_name)
+
+
 @app.route('/catalog/<category_name>/items/JSON/')
 def showCategoryItemsJSON(category_name):
-    """This function is responsible to give the data of this API endpoint 
+    """This function is responsible to give the data of this API endpoint
     as a JSON object, the data being sent in this function is
     all the items of a specific category.
 
@@ -333,15 +283,15 @@ def showCategoryItemsJSON(category_name):
 
     Returns:
     JSON object: the category items
-
     """
     chosenCategory = session.query(Category).filter_by(name=category_name).one()
-    items = session.query(Item).filter_by(category_id = chosenCategory.id).all()
+    items = session.query(Item).filter_by(category_id=chosenCategory.id).all()
     return jsonify(Items=[i.serialize for i in items])
 
+
 @app.route('/catalog/<category_name>/<item_name>/')
-def showItemsDescription(category_name,item_name):
-    """This function takes a category name and an item name and shows the user 
+def showItemsDescription(category_name, item_name):
+    """This function takes a category name and an item name and shows the user
     the description of that item
 
     Parameters:
@@ -350,15 +300,15 @@ def showItemsDescription(category_name,item_name):
 
     Returns:
     template: a HTML template containing the item description
-
     """
-    category = session.query(Category).filter_by(name = category_name).one()
-    item = session.query(Item).filter_by(category_id = category.id, name=item_name).one()
-    return render_template('item_description.html',item = item)
-    
+    category = session.query(Category).filter_by(name=category_name).one()
+    item = session.query(Item).filter_by(category_id=category.id, name=item_name).one()
+    return render_template('item_description.html', item=item)
+
+
 @app.route('/catalog/<category_name>/<item_name>/JSON')
-def showItemsDescriptionJSON(category_name,item_name):
-    """This function is responsible to give the data of this API endpoint 
+def showItemsDescriptionJSON(category_name, item_name):
+    """This function is responsible to give the data of this API endpoint
     as a JSON object, the data being sent in this function is
     an item as a JSON object
 
@@ -367,56 +317,50 @@ def showItemsDescriptionJSON(category_name,item_name):
     item_name (string): the chosen item
     Returns:
     JSON object: a JSON object containing the item
-
     """
-    category = session.query(Category).filter_by(name = category_name).one()
-    item = session.query(Item).filter_by(category_id = category.id, name=item_name).one()
+    category = session.query(Category).filter_by(name=category_name).one()
+    item = session.query(Item).filter_by(category_id=category.id, name=item_name).one()
     return jsonify(Item=item.serialize)
+
 
 @app.route('/catalog/item/new', methods=['GET', 'POST'])
 def newCatalogItem():
-    """This function is responsible for making a new item 
+    """This function is responsible for making a new item
 
 
     Returns:
     template: a HTML template of the page that the user will provide the item information in (GET)
     template: a HTML template of the items after the item has been added (POST)
-
     """
-    
+
     # allow only the authenticated users
     if 'username' not in login_session:
         return redirect('/login')
 
     if request.method == 'POST':
-        name = request.form.get('name',None)
-        description = request.form.get('description',None)
-        chosenCategory = request.form.get('category',None)
-        exist = session.query(Item).filter_by(name = name).first()
-        #make sure that there's no item in the database with the same name
+        name = request.form.get('name', None)
+        description = request.form.get('description', None)
+        chosenCategory = request.form.get('category', None)
+        exist = session.query(Item).filter_by(name=name).first()
+        # make sure that there's no item in the database with the same name
         if exist is None:
-            category = session.query(Category).filter_by(name = chosenCategory).one()
-            newItem = Item(name = name, description = description,category_id= category.id,user_id = login_session['user_id'])
+            category = session.query(Category).filter_by(name=chosenCategory).one()
+            newItem = Item(name=name, description=description, category_id=category.id, user_id=login_session['user_id'])
             session.add(newItem)
             session.commit()
             flash('New %s Item Successfully Created' % chosenCategory)
             return redirect(url_for('showCategoriesAndLatestitems'))
         else:
             print("name mtkrr")
-            
-            redirect(url_for('newCatalogItem')) 
+
+            redirect(url_for('newCatalogItem'))
             flash('This item name already exist')
             return
 
     else:
         categories = session.query(Category)
-        return render_template('add_item.html',categories=categories)
-  
+        return render_template('add_item.html', categories=categories)
 
-
-
-
-    
 
 @app.route('/catalog/<item_name>/edit', methods=['GET', 'POST'])
 def editCatalogItem(item_name):
@@ -429,36 +373,30 @@ def editCatalogItem(item_name):
     Returns:
     template: a HTML template of the page that the user will edit the item information in (GET)
     template: a HTML template of the items after the item has been edited (POST)
-
     """
-    #allow only authenticated users
+    # allow only authenticated users
     if 'username' not in login_session:
         return redirect('/login')
-    
-    item = session.query(Item).filter_by(name = item_name).one()
+
+    item = session.query(Item).filter_by(name=item_name).one()
     categories = session.query(Category)
-    category = session.query(Category).filter_by(id = item.category_id).one()
-    #allow only the creator of the item to edit it
+    category = session.query(Category).filter_by(id=item.category_id).one()
+    # allow only the creator of the item to edit it
     if login_session['user_id'] != item.user_id:
         return "<script>function myFunction() {alert('You are not authorized to edit this catalog item. Please create your own items in order to edit.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
         print("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         item.name = request.form['name']
         item.description = request.form['description']
-        chosenCategory = session.query(Category).filter_by(name = request.form['category']).one()
+        chosenCategory = session.query(Category).filter_by(name=request.form['category']).one()
         item.category_id = chosenCategory.id
         session.add(item)
         session.commit()
         flash('Item Successfully Edited')
-        return redirect(url_for('showItemsDescription',item_name=item.name,category_name=chosenCategory.name))
-    
+        return redirect(url_for('showItemsDescription', item_name=item.name, category_name=chosenCategory.name))
+
     else:
-        return render_template('edit_item.html',item=item, categories=categories,category_name = category.name)
-
-
-
-
-    
+        return render_template('edit_item.html', item=item, categories=categories, category_name=category.name)
 
 
 @app.route('/catalog/<item_name>/delete', methods=['GET', 'POST'])
@@ -471,17 +409,15 @@ def deleteCatalogItem(item_name):
     Returns:
     template: a HTML template of the page that the user will delete the item in (GET)
     template: a HTML template of the items after the item has been deleted (POST)
-
     """
-    #allow only authenticated users
+    # allow only authenticated users
     if 'username' not in login_session:
         return redirect('/login')
-    item = session.query(Item).filter_by(name = item_name).one()
-    category = session.query(Category).filter_by(id = item.category_id).one()
-    #allow only the creator of the item to delete it
+    item = session.query(Item).filter_by(name=item_name).one()
+    category = session.query(Category).filter_by(id=item.category_id).one()
+    # allow only the creator of the item to delete it
     if login_session['user_id'] != item.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to edit this catalog item. Please create your own items in order to edit.');}</script><body onload='myFunction()''>"    
-    
+        return "<script>function myFunction() {alert('You are not authorized to edit this catalog item. Please create your own items in order to edit.');}</script><body onload='myFunction()''>" 
     if request.method == 'POST':
         session.delete(item)
         flash('%s Successfully Deleted' % item.name)
@@ -489,11 +425,7 @@ def deleteCatalogItem(item_name):
         return redirect(url_for('showCategoriesAndLatestitems'))
 
     else:
-        return render_template('delete_item.html',item=item,category_name = category.name)
-
-
-
-
+        return render_template('delete_item.html', item=item, category_name=category.name)
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
