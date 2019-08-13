@@ -32,7 +32,7 @@
 {%endif%}
 <h1 class="home_headers">Latest Items</h1>
 {% for i in latestItems %}
-<a class="latest_items" href='{{url_for('showItemsDescription',category_name=i.category_name,item_name=i.name)}}'>
+<a class="items" href='{{url_for('showItemsDescription',category_name=i.category_name,item_name=i.name)}}'>
 <div>
 
 <p><span>Item Name: </span>{{i.name}}</p>
