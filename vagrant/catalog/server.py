@@ -21,7 +21,8 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-CLIENT_ID = (json.loads(open('client_secrets.json', 'r').read())['web']['client_id'])
+CLIENT_ID = json.loads(
+    open('client_secrets.json', 'r').read())['web']['client_id']
 
 
 def createUser(login_session):
