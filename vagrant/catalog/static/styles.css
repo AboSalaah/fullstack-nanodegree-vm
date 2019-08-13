@@ -102,7 +102,7 @@ body {
 
   }
  
-  .home_headers{
+  .home_headers, .category_items_headers{
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     font-size: 30px;
     margin-bottom: 20px;
@@ -117,7 +117,7 @@ body {
     color: rgb(217,83,79);
     font-size: 18px;
   }
-  .latest_items{
+  .items{
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     display: block;
     margin-top: 10px;
@@ -157,4 +157,13 @@ body {
     margin-top: 10px;
     margin-bottom: 10px;
   }
- 
+ .login_header{
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 30px;
+ }
+ #signinButton{
+  margin-top: 130px;
+  margin-bottom: 10px;
+ }
