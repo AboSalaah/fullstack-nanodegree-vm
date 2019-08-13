@@ -103,7 +103,8 @@ def showCategoriesAndLatestitems():
 
     """
     categories = session.query(Category)
-    latestItems = session.query(Item).order_by(desc(Item.last_modification))
+    latestItems = session.query(Category,Item).filter(Category.id==Item.category_id).order_by(desc(Item.last_modification))        
+    #latestItems = session.query(Item).order_by(desc(Item.last_modification))
     
     return render_template('homepage.html',categories=categories, latestItems = latestItems)
 

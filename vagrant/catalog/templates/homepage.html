@@ -32,12 +32,12 @@
 {%endif%}
 <h1 class="home_headers">Latest Items</h1>
 {% for i in latestItems %}
-<a class="items" href='{{url_for('showItemsDescription',category_name=i.category_name,item_name=i.name)}}'>
+<a class="items" href='{{url_for('showItemsDescription',category_name=i.Category.name,item_name=i.Item.name)}}'>
 <div>
 
-<p><span>Item Name: </span>{{i.name}}</p>
-<p><span>Category: </span>{{i.category_name}}</p>
-<p> <span>Last Update: </span>{{i.last_modification}} </p>
+<p><span>Item Name: </span>{{i.Item.name}}</p>
+<p><span>Category: </span>{{i.Category.name}}</p>
+<p> <span>Last Update: </span>{{i.Item.last_modification}} </p>
 
 </div>
 </a>
