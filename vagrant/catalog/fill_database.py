@@ -28,19 +28,27 @@ category3 = Category(name = "Handball")
 session.add(category3)
 session.commit()
 
+category4= Category(name = "Basketball")
+session.add(category4)
+session.commit()
+
+category5= Category(name = "Volleyball")
+session.add(category5)
+session.commit()
+
 # Create dummy items
-item1 = Item(name = "Zamalek",description="1911",category=category1,user=user1)
+item1 = Item(name = "Ronaldinho",description="A football player from Brazil, and one of the best football players of all time",category=category1,user=user1)
 session.add(item1)
 session.commit()
 
-item2 = Item(name = "Rafael Nadal", description = "the king of clay", category= category2,user=user1)
+item2 = Item(name = "Rafael Nadal", description = "A tennis palyer from Spain, and he is called the king of clay", category= category2,user=user1)
 session.add(item2)
 session.commit()
 
-item3 = Item(name = "Ahmed El-ahmar", description="the king of handball",category = category3,user=user1)
+item3 = Item(name = "Ahmed El-ahmar", description="A handball player from Egypt, and one of the best handball player of Egypt's history",category = category3,user=user1)
 session.add(item3)
 session.commit()
 
-item4 = Item(name = "Ahly",description="1907",category=category1,user=user1)
+item4 = Item(name = "Lionel Messi",description="A football player from Argentina, and one of the best or maybe the best football palyer of all time",category=category1,user=user1)
 session.add(item4)
 session.commit()
