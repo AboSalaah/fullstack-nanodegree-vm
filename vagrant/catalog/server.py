@@ -31,6 +31,17 @@ CLIENT_ID = json.loads( open('client_secrets.json', 'r').read())['web']['client_
 
 
 def createUser(login_session):
+
+    """This function takes a login session information
+    of a user and make an entry for that user in the database
+
+    Parameters:
+    login_session (dictionary): the login session information about the user
+
+    Returns:
+    int: the ID of the newly created user
+
+    """
     newUser = User(name=login_session['username'], email=login_session[
                    'email'], picture=login_session['picture'])
     session.add(newUser)
@@ -40,11 +51,32 @@ def createUser(login_session):
 
 
 def getUserInfo(user_id):
+    """This function takes a user ID that exists in our database
+    and return the user itself with all its information
+
+    Parameters:
+    user_id (int): the ID of the user in the database
+
+    Returns:
+    user: the user object
+
+    """
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
 def getUserID(email):
+    """This function takes a user email and returns its ID if the user
+    exists in our database, otherwise it returns None
+
+    Parameters:
+    email (string): the email of the user
+
+    Returns:
+    int: the ID of the user (if found)
+    None : if the user isn't found
+
+    """
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
@@ -63,6 +95,13 @@ def getUserID(email):
 
 @app.route('/')
 def showCategoriesAndLatestitems():
+    """This function is responsible for rendering the home page template with 
+    the required data (all different categories and the latest added items)
+
+    Returns:
+    template: a HTML template of the home page
+
+    """
     categories = session.query(Category)
     latestItems = session.query(Item).order_by(desc(Item.last_modification))
     
@@ -73,6 +112,14 @@ def showCategoriesAndLatestitems():
 
 @app.route('/categories/JSON')
 def showCategoriesandItems():
+    """This function is responsible to give the data of this API endpoint 
+    as a JSON object, the data being sent in this function is
+    all the categories accompanied by their items
+
+    Returns:
+    JSON object: all the categories with their items
+
+    """
     categories = session.query(Category)
     return jsonify(categories=[category.serialize for category in categories.all()])
 
@@ -80,6 +127,13 @@ def showCategoriesandItems():
 
 @app.route('/login')
 def showLogin():
+    """This function is responsible for creating an anti-forgery state token
+    to prevent cross-site request forgery attacks, and rendering the login page
+
+    Returns:
+    template: an HTML template of the login page
+   
+    """
     #create anti-forgery state token
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
@@ -91,6 +145,18 @@ def showLogin():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    """This function handles the code sent back from the callback method, and 
+    make some validations and verifications like validating the state token and 
+    the access token.
+    It also stores the access token in the user login session and save all user's data
+    int the login session as well. 
+
+
+    Returns:
+    template: a HTML template that contains the user data to welcome the user after logging in
+    
+
+    """
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -187,6 +253,15 @@ def gconnect():
 
 @app.route('/gdisconnect')
 def gdisconnect():
+    """This function is responsible for disconnecting the user from
+    out website, it tells the server to reject the acess token, and it deletes 
+    all the user data from the login session
+
+    Returns:
+    response: a message to the user that they are successfully disconnected or an error happened
+    
+
+    """
     access_token = login_session.get('access_token')
     if access_token is None:
         print ('Access Token is None')
@@ -229,6 +304,17 @@ def gdisconnect():
 
 @app.route('/catalog/<category_name>/items/')
 def showCategoryItems(category_name):
+    """This function takes a category name and returns a HTML template page 
+    that shows the items of that category to the user
+
+    Parameters:
+    category_name (string): the category name that we want to see its items
+
+    Returns:
+    template: an HTML template containing the required data
+
+    """
+    
     categories = session.query(Category)
     category = session.query(Category).filter_by(name = category_name).one()
     items = session.query(Item).filter_by(category_id = category.id)
@@ -236,35 +322,77 @@ def showCategoryItems(category_name):
     
 @app.route('/catalog/<category_name>/items/JSON/')
 def showCategoryItemsJSON(category_name):
+    """This function is responsible to give the data of this API endpoint 
+    as a JSON object, the data being sent in this function is
+    all the items of a specific category.
+
+    Parameters:
+    category_name (string): the category name that we want its items
+
+    Returns:
+    JSON object: the category items
+
+    """
     chosenCategory = session.query(Category).filter_by(name=category_name).one()
     items = session.query(Item).filter_by(category_id = chosenCategory.id).all()
     return jsonify(Items=[i.serialize for i in items])
 
 @app.route('/catalog/<category_name>/<item_name>/')
 def showItemsDescription(category_name,item_name):
+    """This function takes a category name and an item name and shows the user 
+    the description of that item
+
+    Parameters:
+    category_name (string): the category of the chosen item
+    item_name (string): the chosen item
+
+    Returns:
+    template: a HTML template containing the item description
+
+    """
     category = session.query(Category).filter_by(name = category_name).one()
     item = session.query(Item).filter_by(category_id = category.id, name=item_name).one()
     return render_template('item_description.html',item = item)
     
 @app.route('/catalog/<category_name>/<item_name>/JSON')
 def showItemsDescriptionJSON(category_name,item_name):
+    """This function is responsible to give the data of this API endpoint 
+    as a JSON object, the data being sent in this function is
+    an item as a JSON object
+
+    Parameters:
+    category_name (string): the category of the chosen item
+    item_name (string): the chosen item
+    Returns:
+    JSON object: a JSON object containing the item
+
+    """
     category = session.query(Category).filter_by(name = category_name).one()
     item = session.query(Item).filter_by(category_id = category.id, name=item_name).one()
     return jsonify(Item=item.serialize)
 
 @app.route('/catalog/item/new', methods=['GET', 'POST'])
 def newCatalogItem():
-    print("I'm hereeeee")
-    print(request.form)
+    """This function is responsible for making a new item 
+
+
+    Returns:
+    template: a HTML template of the page that the user will provide the item information in (GET)
+    template: a HTML template of the items after the item has been added (POST)
+
+    """
+    
+    # allow only the authenticated users
     if 'username' not in login_session:
         return redirect('/login')
+
     if request.method == 'POST':
         name = request.form.get('name',None)
         description = request.form.get('description',None)
         chosenCategory = request.form.get('category',None)
         exist = session.query(Item).filter_by(name = name).first()
+        #make sure that there's no item in the database with the same name
         if exist is None:
-            print("name msh mtkrr")
             category = session.query(Category).filter_by(name = chosenCategory).one()
             newItem = Item(name = name, description = description,category_id= category.id,user_id = login_session['user_id'])
             session.add(newItem)
@@ -290,12 +418,25 @@ def newCatalogItem():
 
 @app.route('/catalog/<item_name>/edit', methods=['GET', 'POST'])
 def editCatalogItem(item_name):
+    """This function is responsible for updating the new information of an item
+    after it has been edited
+
+    Parameters:
+    item_name (string): the edited item
+
+    Returns:
+    template: a HTML template of the page that the user will edit the item information in (GET)
+    template: a HTML template of the items after the item has been edited (POST)
+
+    """
+    #allow only authenticated users
     if 'username' not in login_session:
         return redirect('/login')
     
     item = session.query(Item).filter_by(name = item_name).one()
     categories = session.query(Category)
     category = session.query(Category).filter_by(id = item.category_id).one()
+    #allow only the creator of the item to edit it
     if login_session['user_id'] != item.user_id:
         return "<script>function myFunction() {alert('You are not authorized to edit this catalog item. Please create your own items in order to edit.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
@@ -319,10 +460,22 @@ def editCatalogItem(item_name):
 
 @app.route('/catalog/<item_name>/delete', methods=['GET', 'POST'])
 def deleteCatalogItem(item_name):
+    """This function is responsible for deleting an item
+
+    Parameters:
+    item_name (string): the item we want to delete
+
+    Returns:
+    template: a HTML template of the page that the user will delete the item in (GET)
+    template: a HTML template of the items after the item has been deleted (POST)
+
+    """
+    #allow only authenticated users
     if 'username' not in login_session:
         return redirect('/login')
     item = session.query(Item).filter_by(name = item_name).one()
     category = session.query(Category).filter_by(id = item.category_id).one()
+    #allow only the creator of the item to delete it
     if login_session['user_id'] != item.user_id:
         return "<script>function myFunction() {alert('You are not authorized to edit this catalog item. Please create your own items in order to edit.');}</script><body onload='myFunction()''>"    
     
