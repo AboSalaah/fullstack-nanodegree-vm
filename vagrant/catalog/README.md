@@ -45,6 +45,8 @@ python server.py
 ### API endpoints
 * GET localhost:8000/categories/JSON
 
+for example: http://localhost:8000/categories/JSON
+
 Response body:
 ```
 {
@@ -54,27 +56,19 @@ Response body:
       "items": [
         {
           "category_id": 1, 
-          "description": "1911", 
+          "description": "A football player from Brazil, and one of the best football players of all time", 
           "id": 1, 
-          "last_modification": "Mon, 12 Aug 2019 09:09:48 GMT", 
-          "name": "Zamalek", 
+          "last_modification": "Tue, 13 Aug 2019 07:26:42 GMT", 
+          "name": "Ronaldinho", 
           "user_id": 1
         }, 
         {
           "category_id": 1, 
-          "description": "1907", 
+          "description": "A football player from Argentina, and one of the best or maybe the best football palyer of all time", 
           "id": 4, 
-          "last_modification": "Mon, 12 Aug 2019 09:09:48 GMT", 
-          "name": "Ahly", 
+          "last_modification": "Tue, 13 Aug 2019 07:26:42 GMT", 
+          "name": "Lionel Messi", 
           "user_id": 1
-        }, 
-        {
-          "category_id": 1, 
-          "description": "my favorite team in Italy", 
-          "id": 5, 
-          "last_modification": "Mon, 12 Aug 2019 10:00:30 GMT", 
-          "name": "Ac Milan", 
-          "user_id": 2
         }
       ], 
       "name": "Football"
@@ -84,19 +78,11 @@ Response body:
       "items": [
         {
           "category_id": 2, 
-          "description": "the king of clay", 
+          "description": "A tennis palyer from Spain, and he is called the king of clay", 
           "id": 2, 
-          "last_modification": "Mon, 12 Aug 2019 09:09:48 GMT", 
+          "last_modification": "Tue, 13 Aug 2019 07:26:42 GMT", 
           "name": "Rafael Nadal", 
           "user_id": 1
-        }, 
-        {
-          "category_id": 2, 
-          "description": "King of Tennis", 
-          "id": 7, 
-          "last_modification": "Mon, 12 Aug 2019 10:09:23 GMT", 
-          "name": "Federer", 
-          "user_id": 2
         }
       ], 
       "name": "Tennis"
@@ -106,27 +92,57 @@ Response body:
       "items": [
         {
           "category_id": 3, 
-          "description": "the king of handball", 
+          "description": "A handball player from Egypt, and one of the best handball player of Egypt's history", 
           "id": 3, 
-          "last_modification": "Mon, 12 Aug 2019 09:09:48 GMT", 
+          "last_modification": "Tue, 13 Aug 2019 07:26:42 GMT", 
           "name": "Ahmed El-ahmar", 
           "user_id": 1
         }, 
         {
           "category_id": 3, 
-          "description": "the best Handball players", 
-          "id": 8, 
-          "last_modification": "Mon, 12 Aug 2019 10:36:27 GMT", 
+          "description": "A handball player from Denmark and he has won the handball player of the year three times", 
+          "id": 5, 
+          "last_modification": "Tue, 13 Aug 2019 07:31:56 GMT", 
           "name": "Mikkel Hansen", 
           "user_id": 2
         }
       ], 
       "name": "Handball"
+    }, 
+    {
+      "id": 4, 
+      "items": [
+        {
+          "category_id": 4, 
+          "description": "A basketball player from the USA and he is called the GOAT of basketball", 
+          "id": 8, 
+          "last_modification": "Tue, 13 Aug 2019 08:08:16 GMT", 
+          "name": "Michael Jordan", 
+          "user_id": 2
+        }
+      ], 
+      "name": "Basketball"
+    }, 
+    {
+      "id": 5, 
+      "items": [
+        {
+          "category_id": 5, 
+          "description": "A volleyball player from Canada and one of the best in the world and he is called Canada\u2019s scoring machine.", 
+          "id": 7, 
+          "last_modification": "Tue, 13 Aug 2019 07:35:03 GMT", 
+          "name": "Earvin Ngapeth", 
+          "user_id": 2
+        }
+      ], 
+      "name": "Volleyball"
     }
   ]
 }
 ```
-* GET localhost:8000//catalog/<category_name>/items/JSON
+* GET localhost:8000/catalog/<category_name>/items/JSON
+
+for example: http://localhost:8000/catalog/Football/items/JSON/
 
 Response body:
 ```
@@ -134,43 +150,37 @@ Response body:
   "Items": [
     {
       "category_id": 1, 
-      "description": "1911", 
+      "description": "A football player from Brazil, and one of the best football players of all time", 
       "id": 1, 
-      "last_modification": "Mon, 12 Aug 2019 09:09:48 GMT", 
-      "name": "Zamalek", 
+      "last_modification": "Tue, 13 Aug 2019 07:26:42 GMT", 
+      "name": "Ronaldinho", 
       "user_id": 1
     }, 
     {
       "category_id": 1, 
-      "description": "1907", 
+      "description": "A football player from Argentina, and one of the best or maybe the best football palyer of all time", 
       "id": 4, 
-      "last_modification": "Mon, 12 Aug 2019 09:09:48 GMT", 
-      "name": "Ahly", 
+      "last_modification": "Tue, 13 Aug 2019 07:26:42 GMT", 
+      "name": "Lionel Messi", 
       "user_id": 1
-    }, 
-    {
-      "category_id": 1, 
-      "description": "my favorite team in Italy", 
-      "id": 5, 
-      "last_modification": "Mon, 12 Aug 2019 10:00:30 GMT", 
-      "name": "Ac Milan", 
-      "user_id": 2
     }
   ]
 }
 ```
 * GET localhost:8000/catalog/<category_name>/<item_name>/JSON
 
+for example: http://localhost:8000/catalog/Football/Ronaldinho/JSON 
+
 Response body:
 ```
 {
   "Item": {
     "category_id": 1, 
-    "description": "my favorite team in Italy", 
-    "id": 5, 
-    "last_modification": "Mon, 12 Aug 2019 10:00:30 GMT", 
-    "name": "Ac Milan", 
-    "user_id": 2
+    "description": "A football player from Brazil, and one of the best football players of all time", 
+    "id": 1, 
+    "last_modification": "Tue, 13 Aug 2019 07:26:42 GMT", 
+    "name": "Ronaldinho", 
+    "user_id": 1
   }
 }
 ```
