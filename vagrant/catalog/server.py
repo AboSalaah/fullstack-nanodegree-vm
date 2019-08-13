@@ -103,8 +103,9 @@ def showCategoriesAndLatestitems():
 
     """
     categories = session.query(Category)
-    latestItems = session.query(Category,Item).filter(Category.id==Item.category_id).order_by(desc(Item.last_modification))        
-    #latestItems = session.query(Item).order_by(desc(Item.last_modification))
+    #only the latest 6 items will be shown
+    latestItems = session.query(Category,Item).filter(Category.id==Item.category_id).order_by(desc(Item.last_modification)).limit(6)       
+    
     
     return render_template('homepage.html',categories=categories, latestItems = latestItems)
 
@@ -441,6 +442,7 @@ def editCatalogItem(item_name):
     if login_session['user_id'] != item.user_id:
         return "<script>function myFunction() {alert('You are not authorized to edit this catalog item. Please create your own items in order to edit.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
+        print("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         item.name = request.form['name']
         item.description = request.form['description']
         chosenCategory = session.query(Category).filter_by(name = request.form['category']).one()
@@ -484,7 +486,7 @@ def deleteCatalogItem(item_name):
         session.delete(item)
         flash('%s Successfully Deleted' % item.name)
         session.commit()
-        return redirect(url_for('showCategoryItems', category_name=category.name))
+        return redirect(url_for('showCategoriesAndLatestitems'))
 
     else:
         return render_template('delete_item.html',item=item,category_name = category.name)
