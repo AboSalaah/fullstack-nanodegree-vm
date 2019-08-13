@@ -68,6 +68,16 @@ def showCategoriesAndLatestitems():
     
     return render_template('homepage.html',categories=categories, latestItems = latestItems)
 
+
+
+
+@app.route('/categories/JSON')
+def showCategoriesandItems():
+    categories = session.query(Category)
+    return jsonify(categories=[category.serialize for category in categories.all()])
+
+
+
 @app.route('/login')
 def showLogin():
     #create anti-forgery state token

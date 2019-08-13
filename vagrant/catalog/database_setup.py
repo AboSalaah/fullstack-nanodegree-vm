@@ -22,6 +22,7 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
+    items = relationship("Item")
 
 
     @property
@@ -30,6 +31,7 @@ class Category(Base):
         return {
             'name': self.name,
             'id': self.id,
+            'items': [item.serialize for item in self.items] 
         }
     
 
@@ -43,7 +45,7 @@ class Item(Base):
     description = Column(String(250))
     last_modification = Column(DateTime, default=func.now())
     category_id = Column(Integer, ForeignKey('categories.id'))
-    category = relationship(Category)
+    category = relationship(Category,back_populates='items')
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
