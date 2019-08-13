@@ -224,6 +224,11 @@ def showCategoryItems(category_name):
     items = session.query(Item).filter_by(category_id = category.id)
     return render_template('category_items.html',categories=categories,items=items,category_name=category_name)
     
+@app.route('/catalog/<category_name>/items/JSON/')
+def showCategoryItemsJSON(category_name):
+    chosenCategory = session.query(Category).filter_by(name=category_name).one()
+    items = session.query(Item).filter_by(category_id = chosenCategory.id).all()
+    return jsonify(Items=[i.serialize for i in items])
 
 @app.route('/catalog/<category_name>/<string:item_name>/')
 def showItemsDescription(category_name,item_name):
