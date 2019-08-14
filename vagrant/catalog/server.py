@@ -86,8 +86,13 @@ def showCategoriesAndLatestitems():
     """
     categories = session.query(Category)
     # only the latest 6 items will be shown
-    latestItems = session.query(Category, Item).filter(Category.id == Item.category_id).order_by(desc(Item.last_modification)).limit(6)
-    return render_template('homepage.html', categories=categories, latestItems=latestItems)
+    latestItems = session.query(Category, Item)\
+        .filter(Category.id == Item.category_id)\
+        .order_by(desc(Item.last_modification))\
+        .limit(6)
+    return render_template('homepage.html',
+                           categories=categories,
+                           latestItems=latestItems)
 
 
 @app.route('/categories/JSON')
@@ -212,7 +217,11 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px;'\
+              'height: 300px;'\
+              'border-radius: 150px;'\
+              '-webkit-border-radius: 150px;'\
+              '-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
     print ("done!")
     return output
@@ -270,7 +279,10 @@ def showCategoryItems(category_name):
     categories = session.query(Category)
     category = session.query(Category).filter_by(name=category_name).one()
     items = session.query(Item).filter_by(category_id=category.id)
-    return render_template('category_items.html', categories=categories, items=items, category_name=category_name)
+    return render_template('category_items.html', 
+                           categories=categories, 
+                           items=items, 
+                           category_name=category_name)
 
 
 @app.route('/catalog/<category_name>/items/JSON/')
@@ -346,7 +358,10 @@ def newCatalogItem():
         # make sure that there's no item in the database with the same name
         if exist is None:
             category = session.query(Category).filter_by(name=chosenCategory).one()
-            newItem = Item(name=name, description=description, category_id=category.id, user_id=login_session['user_id'])
+            newItem = Item(name=name, 
+                           description=description, 
+                           category_id=category.id, 
+                           user_id=login_session['user_id'])
             session.add(newItem)
             session.commit()
             flash('New %s Item Successfully Created' % chosenCategory)
@@ -394,10 +409,15 @@ def editCatalogItem(item_name):
         session.add(item)
         session.commit()
         flash('Item Successfully Edited')
-        return redirect(url_for('showItemsDescription', item_name=item.name, category_name=chosenCategory.name))
+        return redirect(url_for('showItemsDescription', 
+                        item_name=item.name, 
+                        category_name=chosenCategory.name))
 
     else:
-        return render_template('edit_item.html', item=item, categories=categories, category_name=category.name)
+        return render_template('edit_item.html', 
+                               item=item, 
+                               categories=categories, 
+                               category_name=category.name)
 
 
 @app.route('/catalog/<item_name>/delete', methods=['GET', 'POST'])
