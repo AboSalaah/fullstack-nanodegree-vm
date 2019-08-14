@@ -3,9 +3,8 @@ An application that provides a list of items within a variety of categories as w
 
 ## Getting Started
 ### prerequisites
-Logs Analysis uses a virtual machine (VM) to run an SQL database server and a web app that uses it.
 
-Logs Analysis requires the following to run:
+Item Catalog requires the following to run:
 
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads) the software that actually runs the virtual machine.
 * [Vagrant](https://www.vagrantup.com/downloads.html) is the software that configures the VM and lets you share files between your host computer and the VM's filesystem.
@@ -39,8 +38,10 @@ $ cd /vagrant
 ```
 * Change folder to /catalog folder which contains the project installed and run the server
 ```
-cd .../catalog
-python server.py
+$ cd .../catalog
+python database_setup.py // to setup the tables and relations of the database
+$ python fill_database.py // to fill the database with dummy data 
+$ python server.py
 ```
 ### API endpoints
 * GET localhost:8000/categories/JSON
