@@ -16,7 +16,7 @@ import requests
 
 app = Flask(__name__)
 
-engine = create_engine('sqlite:///itemcatalog.db?check_same_thread=False')
+engine = create_engine('postgresql://catalog:1234@localhost/itemcatalogpsql')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
